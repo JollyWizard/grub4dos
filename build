@@ -17,31 +17,8 @@ COPY_FILES="COPYING README_GRUB4DOS*.txt ChangeLog_*.txt \
 
 rm -rf *.zip *.7z *~ || exit $?
 [ -z "$GRUB4DOS_TEMP" ] && GRUB4DOS_TEMP=/tmp/grub4dos-temp
-if svn export . ${GRUB4DOS_TEMP} --force 2>/dev/null ; then
-# check for svn version
-	export LC_ALL=C
-	svninfo=$(svn info)
-	if [ "$svninfo" ]; then
-		while read w1 w2 w3; do
-			if [ "$w1" = "Revision:" -a "$w2" != "" -a "$w3" = "" ]; then
-				CURR_REVISION=r$w2
-			fi
-			if [ "$w1" = "URL:" -a "$w2" != "" -a "$w3" = "" ]; then
-				SVN_URL=$w2
-			fi
-			[ "$CURR_REVISION" != "" -a "$SVN_URL" != "" ] && break
-		done << EOF
-$svninfo
-EOF
-	fi
 
-	[ "$SVN_URL" = "" ] && SVN_URL="https://github.com/chenall/grub4dos"
-	[ "$CURR_REVISION" = "" ] && CURR_REVISION=rHEAD
-	Get_source="\tsvn co -$CURR_REVISION $SVN_URL grub4dos\r\n\tcd grub4dos\r\n\r\n"
-	# Generate patch file
-	svn diff . > ${GRUB4DOS_TEMP}/grub4dos_${CURR_REVISION}.diff 2>/dev/null
-
-elif git checkout-index -a -f --prefix=${GRUB4DOS_TEMP}/ 2>/dev/null ; then
+if git checkout-index -a -f --prefix=${GRUB4DOS_TEMP}/ 2>/dev/null ; then
 # check for git version
 	CURR_REVISION=$(git log -1 --pretty=format:%h)
 	Get_source="\tgit clone git://github.com/chenall/grub4dos.git\r\n\tcd grub4dos\r\n\tgit checkout $CURR_REVISION -b build\r\n\r\n"
