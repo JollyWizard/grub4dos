@@ -6,8 +6,9 @@ This is my attempt to cleanup grub4dos into something I can hopefully improve.
 
 ## Cleanup Goals
 
-* Standardize the build process into a reproducible docker container.
+* Standardize the build process inside a reproducible docker container.
 * Remove all traces of automake.
+* Remove any cygwin specific content.
 * Remove chinese specific content.
 * Remove default boot tools
 
