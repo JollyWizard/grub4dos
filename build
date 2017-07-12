@@ -6,36 +6,16 @@
 #	sh build
 # or
 #	./build
+
 SOURCE_DIR=`pwd`
 VER=`cat grub4dos_version`
 DATE=`date -u +%Y-%m-%d`
 RELEASE=grub4dos-${VER}-${DATE}
-COPY_FILES="COPYING README_GRUB4DOS*.txt ChangeLog_*.txt \
-	config.sys default menu.lst grub.pif \
-	stage2/grldr stage2/grub.exe stage2/badgrub.exe stage2/grldr.mbr stage2/bootlace.com \
-	stage2/hmload.com"
 
+# Clean and setup working directory.
+# TODO: move temp directory to local `target` subdirectory like maven.
 rm -rf *.zip *.7z *~ || exit $?
 [ -z "$GRUB4DOS_TEMP" ] && GRUB4DOS_TEMP=/tmp/grub4dos-temp
-
-if git checkout-index -a -f --prefix=${GRUB4DOS_TEMP}/ 2>/dev/null ; then
-# check for git version
-	CURR_REVISION=$(git log -1 --pretty=format:%h)
-	Get_source="\tgit clone git://github.com/chenall/grub4dos.git\r\n\tcd grub4dos\r\n\tgit checkout $CURR_REVISION -b build\r\n\r\n"
-	# Generate patch file
-	git diff --no-prefix > ${GRUB4DOS_TEMP}/grub4dos_${CURR_REVISION}.diff 2> /dev/null
-	if [ -s ${GRUB4DOS_TEMP}/grub4dos_${CURR_REVISION}.diff ]; then
-		cd ${GRUB4DOS_TEMP} || exit $?
-		patch -p0 < grub4dos_${CURR_REVISION}.diff
-	fi
-else
-	files=$(echo *)
-	if ! [ -d ${GRUB4DOS_TEMP} ] ; then
-		mkdir ${GRUB4DOS_TEMP} || exit $?
-	fi
-	cp -a $files ${GRUB4DOS_TEMP} || exit $?
-fi
-
 cd ${GRUB4DOS_TEMP} || exit $?
 
 #############################################
@@ -48,6 +28,14 @@ make || exit $?
 rm -rf grub4dos-${VER}
 mkdir grub4dos-${VER} || exit $?
 [ -f stage2/eltorito.sys ] && cp stage2/eltorito.sys grub4dos-${VER}
+
+# Macro value refractored into this section.
+# TODO: remove text files that were targeted during cleanup.
+COPY_FILES="COPYING README_GRUB4DOS*.txt ChangeLog_*.txt \
+	config.sys default menu.lst grub.pif \
+	stage2/grldr stage2/grub.exe stage2/badgrub.exe stage2/grldr.mbr stage2/bootlace.com \
+	stage2/hmload.com"
+
 cp $COPY_FILES grub4dos-${VER} || exit $?
 cd grub4dos-${VER}
 # generate bootlace64.com
