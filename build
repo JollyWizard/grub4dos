@@ -38,15 +38,6 @@ fi
 
 cd ${GRUB4DOS_TEMP} || exit $?
 
-if [ "$Get_source" ]; then
-	echo -n -e "Get the source code of this build in this way:\r\n\r\n${Get_source}" > Get_Source_of_This_Build.txt
-	if [ -s grub4dos_${CURR_REVISION}.diff ]; then
-		echo -n -e "and then apply the patch against revision ${CURR_REVISION} you just downloaded:\r\n\r\n\
-	patch -p0 < ../grub4dos_${CURR_REVISION}.diff\r\n\r\n" >> Get_Source_of_This_Build.txt
-	fi
-	echo -n -e "and now you may do a \"make\" to compile.\r\n\r\n" >> Get_Source_of_This_Build.txt
-fi
-
 #############################################
 #	Build english version
 #############################################
