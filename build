@@ -27,6 +27,8 @@ make clean
 make || exit $?
 rm -rf grub4dos-${VER}
 mkdir grub4dos-${VER} || exit $?
+
+## TODO: Remove this cd-rom driver? (http://reboot.pro/topic/9950-eltoritosys-driver-is-released-under-the-mit-licence/)
 [ -f stage2/eltorito.sys ] && cp stage2/eltorito.sys grub4dos-${VER}
 
 # Macro value refractored into this section.
